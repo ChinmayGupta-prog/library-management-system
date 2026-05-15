@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Categories')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<main class="page">
+    <div class="toolbar">
+        <div>
+            <p class="eyebrow">Collections</p>
+            <h1>Categories</h1>
+        </div>
+    </div>
+    <div th:replace="~{fragments :: alerts}"></div>
+    <section class="split">
+        <form class="form-surface" th:action="@{/categories}" th:object="${category}" method="post">
+            <h2>Add collection</h2>
+            <div class="form-grid one">
+                <label>Name<input th:field="*{name}" required></label>
+                <label>Description<textarea th:field="*{description}" rows="4"></textarea></label>
+                <label>Accent Color<input th:field="*{accentColor}" type="color" value="#35d0ba"></label>
+            </div>
+            <button class="btn primary" type="submit"><span class="material-icons-round">add</span>Add Category</button>
+        </form>
+        <div class="category-grid">
+            <article class="category-card" th:each="category : ${categories}" th:style="'--accent:' + ${category.accentColor}">
+                <span class="material-icons-round">collections_bookmark</span>
+                <h2 th:text="${category.name}">Category</h2>
+                <p th:text="${category.description}">Description</p>
+            </article>
+        </div>
+    </section>
+</main>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

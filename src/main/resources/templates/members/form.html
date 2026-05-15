@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Member Form')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<main class="page narrow">
+    <div class="toolbar">
+        <div>
+            <p class="eyebrow">Members</p>
+            <h1 th:text="${member.id == null ? 'Add member' : 'Edit member'}">Add member</h1>
+        </div>
+        <a class="btn secondary" th:href="@{/members}"><span class="material-icons-round">arrow_back</span>Back</a>
+    </div>
+    <form class="form-surface" th:action="@{/members}" th:object="${member}" method="post">
+        <input type="hidden" th:field="*{id}">
+        <div class="form-grid">
+            <label>Full Name<input th:field="*{fullName}" required></label>
+            <label>Email<input th:field="*{email}" type="email"></label>
+            <label>Phone<input th:field="*{phone}"></label>
+            <label>Membership Code<input th:field="*{membershipCode}"></label>
+            <label>Status
+                <select th:field="*{status}">
+                    <option th:each="status : ${statuses}" th:value="${status}" th:text="${status}"></option>
+                </select>
+            </label>
+        </div>
+        <button class="btn primary" type="submit"><span class="material-icons-round">save</span>Save Member</button>
+    </form>
+</main>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

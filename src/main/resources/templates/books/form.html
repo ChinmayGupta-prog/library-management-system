@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Book Form')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<main class="page narrow">
+    <div class="toolbar">
+        <div>
+            <p class="eyebrow">Catalog</p>
+            <h1 th:text="${book.id == null ? 'Add book' : 'Edit book'}">Add book</h1>
+        </div>
+        <a class="btn secondary" th:href="@{/books}"><span class="material-icons-round">arrow_back</span>Back</a>
+    </div>
+    <form class="form-surface" th:action="@{/books}" th:object="${book}" method="post">
+        <input type="hidden" th:field="*{id}">
+        <div class="form-grid">
+            <label>Title<input th:field="*{title}" required></label>
+            <label>ISBN<input th:field="*{isbn}"></label>
+            <label>Author
+                <input name="authorName"
+                       list="authorSuggestions"
+                       th:value="${book.author != null ? book.author.name : ''}"
+                       placeholder="Write author name"
+                       required>
+                <datalist id="authorSuggestions">
+                    <option th:each="author : ${authors}" th:value="${author.name}"></option>
+                </datalist>
+            </label>
+            <label>Category
+                <select name="categoryId" required>
+                    <option value="" disabled th:selected="${book.category == null}">Select category</option>
+                    <option th:each="category : ${categories}"
+                            th:value="${category.id}"
+                            th:selected="${book.category != null and book.category.id == category.id}"
+                            th:text="${category.name}"></option>
+                </select>
+            </label>
+            <label>Status
+                <select th:field="*{status}">
+                    <option th:each="status : ${statuses}" th:value="${status}" th:text="${status}"></option>
+                </select>
+            </label>
+            <label>Publisher<input th:field="*{publisher}"></label>
+            <label>Publication Year<input th:field="*{publicationYear}" type="number"></label>
+            <label>Shelf Location<input th:field="*{shelfLocation}"></label>
+            <label class="wide">Cover Image URL<input th:field="*{coverUrl}"></label>
+            <label class="wide">Summary<textarea th:field="*{summary}" rows="5"></textarea></label>
+        </div>
+        <button class="btn primary" type="submit"><span class="material-icons-round">save</span>Save Book</button>
+    </form>
+</main>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Home')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<main class="page">
+    <section class="hero">
+        <div class="hero-content">
+            <p class="eyebrow">Digital Library Management System</p>
+            <h1>Lumina Library</h1>
+            <p class="hero-copy">A polished workspace for managing books, members, borrowing activity, due dates, and library collections with confidence.</p>
+            <div class="hero-actions">
+                <a class="btn primary" th:href="@{/loans/new}"><span class="material-icons-round">ios_share</span>Issue Book</a>
+            </div>
+            <div class="hero-points">
+                <span><span class="material-icons-round">verified</span>Smart catalog</span>
+                <span><span class="material-icons-round">notifications_active</span>Due tracking</span>
+                <span><span class="material-icons-round">analytics</span>Live insights</span>
+            </div>
+        </div>
+        <div class="hero-showcase">
+            <div class="brand-stage" aria-label="Lumina Library visual">
+                <div class="logo-orbit">
+                    <span class="orbit-ring one"></span>
+                    <span class="orbit-ring two"></span>
+                    <span class="library-emblem">
+                        <span class="material-icons-round">auto_stories</span>
+                    </span>
+                    <span class="book-tile tile-one"><span class="material-icons-round">menu_book</span></span>
+                    <span class="book-tile tile-two"><span class="material-icons-round">bookmark</span></span>
+                    <span class="book-tile tile-three"><span class="material-icons-round">local_library</span></span>
+                </div>
+                <div class="brand-caption">
+                    <span class="desk-label">Lumina LMS</span>
+                    <h2>Designed for modern libraries</h2>
+                    <p>Elegant cataloging, smooth circulation, and organized reader management in one dark professional workspace.</p>
+                </div>
+                <div class="brand-actions">
+                    <a th:href="@{/books}"><span class="material-icons-round">travel_explore</span>Explore Catalog</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div th:replace="~{fragments :: alerts}"></div>
+
+    <section class="stats-grid">
+        <article class="stat-card">
+            <span class="material-icons-round">menu_book</span>
+            <p>Total Books</p>
+            <strong th:text="${stats.totalBooks()}">0</strong>
+        </article>
+        <article class="stat-card">
+            <span class="material-icons-round">fact_check</span>
+            <p>Active Loans</p>
+            <strong th:text="${stats.activeLoans()}">0</strong>
+        </article>
+        <article class="stat-card">
+            <span class="material-icons-round">category</span>
+            <p>Collections</p>
+            <strong th:text="${stats.categories()}">0</strong>
+        </article>
+        <article class="stat-card warning">
+            <span class="material-icons-round">schedule</span>
+            <p>Overdue</p>
+            <strong th:text="${stats.overdueLoans()}">0</strong>
+        </article>
+    </section>
+
+    <section class="section-head">
+        <div>
+            <p class="eyebrow">Recently Added</p>
+            <h2>Featured shelves</h2>
+        </div>
+        <a class="link-action" th:href="@{/books}">View catalog <span class="material-icons-round">arrow_forward</span></a>
+    </section>
+
+    <section class="book-grid">
+        <article class="book-card" th:each="book : ${newBooks}">
+            <img th:src="${book.coverUrl}" th:alt="${book.title}">
+            <div>
+                <span class="chip" th:text="${book.category != null ? book.category.name : 'General'}">Category</span>
+                <h3 th:text="${book.title}">Book Title</h3>
+                <p th:text="${book.author != null ? book.author.name : 'Unknown Author'}">Author</p>
+                <small th:text="${book.shelfLocation}">Shelf</small>
+            </div>
+        </article>
+    </section>
+
+    <section class="split">
+        <article class="surface">
+            <div class="section-head compact">
+                <div>
+                    <p class="eyebrow">Quick Issue</p>
+                    <h2>Ready books</h2>
+                </div>
+            </div>
+            <div class="hanging-books">
+                <div class="book-hanger" th:each="book, iter : ${availableBooks}" th:if="${iter.index < 4}">
+                    <span class="hanger-line"></span>
+                    <article>
+                        <img th:src="${book.coverUrl}" th:alt="${book.title}">
+                        <div>
+                            <strong th:text="${book.title}">Book</strong>
+                            <span th:text="${book.author != null ? book.author.name : 'Unknown Author'}">Author</span>
+                            <small th:text="${book.shelfLocation}">Shelf</small>
+                        </div>
+                    </article>
+                </div>
+                <p class="empty" th:if="${#lists.isEmpty(availableBooks)}">No books available right now.</p>
+            </div>
+        </article>
+        <article class="surface">
+            <div class="section-head compact">
+                <div>
+                    <p class="eyebrow">Circulation</p>
+                    <h2>Due soon</h2>
+                </div>
+            </div>
+            <div class="compact-list">
+                <div th:each="loan : ${activeLoans}">
+                    <span class="material-icons-round">event</span>
+                    <span th:text="${loan.book.title}">Book</span>
+                    <small th:text="${loan.dueOn}">Due</small>
+                </div>
+                <p class="empty" th:if="${#lists.isEmpty(activeLoans)}">No active loans yet.</p>
+            </div>
+        </article>
+    </section>
+</main>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

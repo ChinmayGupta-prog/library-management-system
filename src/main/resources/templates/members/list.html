@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Members')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<main class="page">
+    <div class="toolbar">
+        <div>
+            <p class="eyebrow">People</p>
+            <h1>Library members</h1>
+        </div>
+        <a class="btn primary" th:href="@{/members/new}"><span class="material-icons-round">person_add</span>Add Member</a>
+    </div>
+    <div th:replace="~{fragments :: alerts}"></div>
+    <form class="searchbar" th:action="@{/members}" method="get">
+        <span class="material-icons-round">search</span>
+        <input name="q" th:value="${query}" placeholder="Search name, email or membership code">
+        <button class="btn secondary" type="submit">Search</button>
+    </form>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Member</th><th>Contact</th><th>Code</th><th>Joined</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+            <tr th:each="member : ${members}">
+                <td th:text="${member.fullName}">Name</td>
+                <td><span th:text="${member.email}">email</span><small th:text="${member.phone}">phone</small></td>
+                <td th:text="${member.membershipCode}">Code</td>
+                <td th:text="${member.joinedOn}">Date</td>
+                <td><span class="chip" th:text="${member.status}">ACTIVE</span></td>
+                <td><a class="icon-btn" th:href="@{/members/{id}/edit(id=${member.id})}"><span class="material-icons-round">edit</span></a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

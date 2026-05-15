@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Issue Book')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<main class="page narrow">
+    <div class="toolbar">
+        <div>
+            <p class="eyebrow">Circulation</p>
+            <h1>Issue a book</h1>
+        </div>
+        <a class="btn secondary" th:href="@{/loans}"><span class="material-icons-round">arrow_back</span>Back</a>
+    </div>
+    <form class="form-surface" th:action="@{/loans}" method="post">
+        <div class="form-grid">
+            <label class="wide">Book
+                <select name="bookId" required>
+                    <option th:each="book : ${books}"
+                            th:value="${book.id}"
+                            th:selected="${selectedBookId != null and selectedBookId == book.id}"
+                            th:text="${book.title + ' - ' + book.shelfLocation}"></option>
+                </select>
+            </label>
+            <label class="wide">Member
+                <select name="memberId" required>
+                    <option th:each="member : ${members}" th:value="${member.id}" th:text="${member.fullName + ' (' + member.membershipCode + ')'}"></option>
+                </select>
+            </label>
+            <label>Loan Days<input name="days" type="number" value="14" min="1" max="90"></label>
+        </div>
+        <button class="btn primary" type="submit"><span class="material-icons-round">ios_share</span>Issue Book</button>
+    </form>
+</main>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>

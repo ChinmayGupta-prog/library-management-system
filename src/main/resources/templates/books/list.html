@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Books')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<main class="page">
+    <div class="toolbar">
+        <div>
+            <p class="eyebrow">Catalog</p>
+            <h1>Book inventory</h1>
+        </div>
+        <a class="btn primary" th:href="@{/books/new}"><span class="material-icons-round">add</span>Add Book</a>
+    </div>
+    <div th:replace="~{fragments :: alerts}"></div>
+    <form class="searchbar" th:action="@{/books}" method="get">
+        <span class="material-icons-round">search</span>
+        <input name="q" th:value="${query}" placeholder="Search title, ISBN, author or category">
+        <button class="btn secondary" type="submit">Search</button>
+    </form>
+    <section class="catalog-grid">
+        <article class="catalog-card" th:each="book : ${books}">
+            <img th:src="${book.coverUrl}" th:alt="${book.title}">
+            <div class="catalog-body">
+                <div class="card-row">
+                    <span class="chip" th:text="${book.status}">AVAILABLE</span>
+                    <small th:text="${book.shelfLocation}">A-01</small>
+                </div>
+                <h2 th:text="${book.title}">Title</h2>
+                <p th:text="${book.summary}">Summary</p>
+                <dl>
+                    <div><dt>Author</dt><dd th:text="${book.author != null ? book.author.name : 'Unknown'}">Author</dd></div>
+                    <div><dt>Category</dt><dd th:text="${book.category != null ? book.category.name : 'General'}">Category</dd></div>
+                    <div><dt>ISBN</dt><dd th:text="${book.isbn}">ISBN</dd></div>
+                </dl>
+                <div class="actions">
+                    <a class="icon-btn" th:href="@{/books/{id}/edit(id=${book.id})}" title="Edit book"><span class="material-icons-round">edit</span></a>
+                    <form th:action="@{/books/{id}/delete(id=${book.id})}" method="post" data-confirm="Remove this book from catalog?">
+                        <button class="icon-btn danger" type="submit" title="Delete book"><span class="material-icons-round">delete</span></button>
+                    </form>
+                </div>
+            </div>
+        </article>
+    </section>
+    <p class="empty" th:if="${#lists.isEmpty(books)}">No books matched your search.</p>
+</main>
+<script th:replace="~{fragments :: scripts}"></script>
+</body>
+</html>
