@@ -165,46 +165,6 @@ docker run --rm -p 8081:8081 \
   library-management-system
 ```
 
-## Deploy with managed MySQL
-
-### Railway (recommended for this MySQL project)
-
-1. Push the repository to GitHub and create a Railway project from that repository.
-2. Add **MySQL** from **New > Database** in the same Railway project.
-3. Open the application service's Variables page and add:
-   - `DB_URL=jdbc:mysql://${{MySQL.MYSQLHOST}}:${{MySQL.MYSQLPORT}}/${{MySQL.MYSQLDATABASE}}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC`
-   - `DB_USERNAME=${{MySQL.MYSQLUSER}}`
-   - `DB_PASSWORD=${{MySQL.MYSQLPASSWORD}}`
-4. Railway detects the `Dockerfile`. Deploy the application service.
-5. Under **Settings > Networking**, generate a public domain.
-6. Open the domain and check deployment logs. Railway supplies `PORT`, and this application reads it through `server.port=${PORT:8081}`.
-
-Railway's current documentation lists a $0 experimentation plan with limited resources, plus paid plans; both the application and database consume usage. Check [Railway pricing](https://docs.railway.com/pricing) and [Railway MySQL variables](https://docs.railway.com/databases/mysql) before deployment.
-
-### Render
-
-Render can run this Java application from its Dockerfile, but Render does not provide managed MySQL. Its managed relational database is PostgreSQL. To retain MySQL, use an external managed-MySQL provider or operate MySQL as a private Render service with a paid persistent disk.
-
-1. Provision MySQL with an external provider, or follow Render's private MySQL service guide.
-2. Create a Render **Web Service** from this repository and select the Docker runtime.
-3. Add secret environment variables `DB_URL`, `DB_USERNAME`, and `DB_PASSWORD` using the MySQL provider's internal/private connection details.
-4. Deploy. Render supplies `PORT`; the application reads it automatically.
-5. Verify the root route and logs. Keep the application and database in the same region when possible.
-
-Render has free web-service instances with sleep and usage limitations, but self-hosted MySQL requires a persistent disk and paid infrastructure. See [Render free-instance limits](https://render.com/docs/free), [Render datastore support](https://render.com/docs/faq), and [Render's MySQL guide](https://render.com/docs/deploy-mysql).
-
-## Screenshots
-
-Replace these placeholders with screenshots captured from the running application:
-
-| Dashboard | Book catalog |
-|---|---|
-| `docs/screenshots/dashboard.png` | `docs/screenshots/books.png` |
-
-| Members | Loans |
-|---|---|
-| `docs/screenshots/members.png` | `docs/screenshots/loans.png` |
-
 ## Design decisions
 
 - **Chosen: server-rendered Spring MVC with Thymeleaf.** This keeps deployment simple and demonstrates a complete Java web application in one codebase. A separate SPA and REST API were not used because they would add a second build/deployment and an API contract that this project's scope does not require.
@@ -213,15 +173,3 @@ Replace these placeholders with screenshots captured from the running applicatio
 - **Chosen: MySQL for persistent use and H2 for demos.** MySQL represents the intended relational database. H2 is retained for quick interviews and local demonstrations, but its in-memory data is intentionally temporary.
 - **Chosen: Hibernate schema update for simple setup.** It reduces onboarding work for a portfolio project. Versioned migrations were not added; they would be the safer choice for controlled production schema evolution.
 - **Chosen: synchronous MVC workflow.** Issue/return operations immediately update the database and redirect to a rendered page. Messaging or event-driven processing would add complexity without a demonstrated need at this scale.
-
-## Current limitations
-
-- No Spring Security, login, roles, or authorization.
-- No REST API; all endpoints render pages or handle HTML forms.
-- No automated tests currently exist under `src/test`.
-- No pagination for books, members, or loans.
-- No dedicated author-management UI and no category edit/delete workflow.
-- Overdue loans are counted but are not automatically transitioned to `OVERDUE`.
-- No protection against two concurrent issue requests for the same book.
-- No database migration tool; schema changes rely on `ddl-auto=update`.
-- Error handling mainly uses redirects or default exceptions; there is no global exception handler.

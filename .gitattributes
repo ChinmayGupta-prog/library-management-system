@@ -1,6 +1,6 @@
 *.java linguist-detectable=true
 src/main/resources/templates/** linguist-detectable=false
-src/main/resources/static/** linguist-detectable=false
+src/main/resources/static/** linguist-vendored
 
 * text=auto
 *.java text eol=lf
