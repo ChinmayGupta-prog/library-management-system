@@ -1,4 +1,16 @@
 target/
 .vscode/
 *.log
+.idea/
+*.iml
+*.class
+.classpath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+hs_err_pid*
+replay_pid*
+.env
+application-local.properties
 

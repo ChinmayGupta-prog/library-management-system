@@ -1,0 +1,10 @@
+*.java linguist-detectable=true
+src/main/resources/templates/** linguist-detectable=false
+src/main/resources/static/** linguist-detectable=false
+
+* text=auto
+*.java text eol=lf
+*.xml text eol=lf
+*.properties text eol=lf
+*.yml text eol=lf
+*.md text eol=lf
